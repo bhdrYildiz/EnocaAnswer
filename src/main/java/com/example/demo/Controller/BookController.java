@@ -15,51 +15,45 @@ import com.example.demo.Entity.Author;
 import com.example.demo.Entity.Book;
 import com.example.demo.Repositories.AuthorRepository;
 import com.example.demo.Repositories.BookRepository;
+import com.example.demo.Services.BookService;
 
 @RestController
 @RequestMapping("books")
 public class BookController {
 	
-	@Autowired
+	/*@Autowired
 	BookRepository bookRep;
 	
 	@Autowired
-	AuthorRepository authorRep;
+	AuthorRepository authorRep;*/
+	@Autowired
+	private BookService bookService;
 	
 	@GetMapping
 	public List<Book> getBooks(){
-		return bookRep.findAll();
+		return bookService.getBooks();
 	}
 	
 	
 	@GetMapping("{id}")
-	Optional<Book> getBook(@PathVariable Long id){
-		return bookRep.findById(id);
+	public Book getBook(@PathVariable Long id){
+		return bookService.getOneBook(id);
 	}
 	
 	
 	@GetMapping("author/{author_id}")
 	List<Book> getBooksByAuthor(@PathVariable Long author_id){
-		return bookRep.findByAuthorId(author_id);
+		return bookService.getBookByAuthorId(author_id);
 	}
 	
 	@PostMapping("new/{id}")
 	String newBook(@PathVariable Long id,@RequestBody Book book) {
+		return bookService.newBook(id, book);
 		
-		for (Author a : authorRep.findAll()) {
-			if(a.getid()==id) {
-				book.setAuthor(a);
-				bookRep.save(book);
-				return "Book Saved!";
-			}
-		}
-		return "no such author in database!";
 	}
 	
 	@PostMapping("delete/{id}")
 	String deleteBook(@PathVariable Long id) {
-		
-		bookRep.deleteById(id);
-		return "book deleted!";
+		return bookService.deleteBook(id);
 	}
 }

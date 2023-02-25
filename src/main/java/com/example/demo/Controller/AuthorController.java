@@ -2,6 +2,7 @@ package com.example.demo.Controller;
 
 import java.util.List;
 
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,49 +15,50 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.Entity.Author;
 import com.example.demo.Repositories.AuthorRepository;
+import com.example.demo.Services.AuthorService;
 
 @RestController
 @RequestMapping("authors")
 public class AuthorController{
 
-	@Autowired
+	/*@Autowired
 	AuthorRepository authorRep;
+	*/
+	
+	@Autowired
+	private AuthorService authorService;
+	
 	
 	@GetMapping
 	public List<Author> getAuthors(){
-		return authorRep.findAll();
+		return authorService.getAuthors();
 	}
 	
 	@GetMapping("/{id}")
-	Optional<Author> getAuthor(@PathVariable Long id){
+	public Author getAuthor(@PathVariable Long id){
 		
-		return authorRep.findById(id);
+		return authorService.getAuthor(id);
 	}
 	
 	@PostMapping("new")
 	String newAuthor(@RequestBody Author author) {
 		
-		authorRep.save(author);
-		return "Author Saved!";
+		authorService.newAuthor(author);
+		return "New Author saved!";
+		
 	}
+	
 	@PostMapping("update/{id}")
 	public String updateAuthor(@PathVariable Long id, @RequestBody Author updateauthor) {
-		Optional<Author> author = authorRep.findById(id);
-		if(author.isPresent()) {
-			Author toupdate = author.get();
-			toupdate.setName(updateauthor.getName());
-			toupdate.setSurname(updateauthor.getSurname());
-			authorRep.save(toupdate);
-			return "author is update now!";
-		}
-		else
-			return "author can't updated";
-	}
+			authorService.updateAuthor(id, updateauthor);
+			return "Author updated!";
+	} 
 	
 	@PostMapping("delete/{id}")
 	String deleteAuthor(@PathVariable Long id) {
+	
+		authorService.deleteOneAuthor(id);
+		return "Author is deleted!";
 		
-		authorRep.deleteById(id);
-		return "author deleted!";
 	}
 }
