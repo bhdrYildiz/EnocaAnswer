@@ -1,13 +1,16 @@
 package com.example.demo.Services;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.Entity.Author;
 import com.example.demo.Entity.Book;
 import com.example.demo.Repositories.BookRepository;
+import com.example.demo.dto.BookDto;
 
 @Service
 public class BookService {
@@ -17,18 +20,24 @@ public class BookService {
 	
 	@Autowired
 	private AuthorService authorService;
+	
+	@Autowired
+	private ModelMapper modelMapper;
 	 
 	public List<Book> getBooks(){
 		return bookRepo.findAll();
 	}
 	
-	public Book getOneBook(Long id) {
-		
-		return bookRepo.findById(id).orElse(null);
+	public BookDto getOneBook(Long id) {
+		Book book = modelMapper.map(id, Book.class);
+		return modelMapper.map(bookRepo.findById(id), BookDto.class);
 	}
 	
-	public List<Book> getBookByAuthorId(Long authorId){
-		return bookRepo.findByAuthorId(authorId);
+	public List<Book> getBookByAuthorId(Optional<Long> authorId){
+		if(authorId.isPresent())
+			return bookRepo.findByAuthorId(authorId);
+		else
+			return bookRepo.findAll();
 	}
 	
 	public String newBook(Long id, Book book) {

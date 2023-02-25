@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.Entity.Author;
 import com.example.demo.Repositories.AuthorRepository;
 import com.example.demo.Services.AuthorService;
+import com.example.demo.dto.AuthorDto;
 
 @RestController
 @RequestMapping("authors")
@@ -36,16 +37,13 @@ public class AuthorController{
 	
 	@GetMapping("/{id}")
 	public Author getAuthor(@PathVariable Long id){
-		
 		return authorService.getAuthor(id);
 	}
 	
 	@PostMapping("new")
-	String newAuthor(@RequestBody Author author) {
+	public AuthorDto newAuthor(@RequestBody AuthorDto author) {
 		
-		authorService.newAuthor(author);
-		return "New Author saved!";
-		
+		return authorService.newAuthor(author);
 	}
 	
 	@PostMapping("update/{id}")
@@ -58,7 +56,6 @@ public class AuthorController{
 	String deleteAuthor(@PathVariable Long id) {
 	
 		authorService.deleteOneAuthor(id);
-		return "Author is deleted!";
-		
+		return "Author is deleted!";	
 	}
 }
