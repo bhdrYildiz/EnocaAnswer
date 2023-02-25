@@ -31,25 +31,24 @@ public class AuthorController{
 	
 	
 	@GetMapping
-	public List<Author> getAuthors(){
+	public List<AuthorDto> getAuthors(){
 		return authorService.getAuthors();
 	}
 	
 	@GetMapping("/{id}")
-	public Author getAuthor(@PathVariable Long id){
+	public AuthorDto getAuthor(@PathVariable Long id){
 		return authorService.getAuthor(id);
 	}
 	
 	@PostMapping("new")
 	public AuthorDto newAuthor(@RequestBody AuthorDto author) {
-		
 		return authorService.newAuthor(author);
 	}
 	
 	@PostMapping("update/{id}")
-	public String updateAuthor(@PathVariable Long id, @RequestBody Author updateauthor) {
-			authorService.updateAuthor(id, updateauthor);
-			return "Author updated!";
+	public AuthorDto updateAuthor(@PathVariable Long id, @RequestBody AuthorDto updateauthor) {
+			return authorService.updateAuthor(id, updateauthor);
+			
 	} 
 	
 	@PostMapping("delete/{id}")

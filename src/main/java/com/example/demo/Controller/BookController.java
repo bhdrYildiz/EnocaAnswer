@@ -32,7 +32,7 @@ public class BookController {
 	private BookService bookService;
 	
 	@GetMapping
-	public List<Book> getBooks(){
+	public List<BookDto> getBooks(){
 		return bookService.getBooks();
 	}
 	

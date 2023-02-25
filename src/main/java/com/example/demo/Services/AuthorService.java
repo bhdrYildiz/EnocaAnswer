@@ -2,6 +2,7 @@ package com.example.demo.Services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,16 @@ public class AuthorService {
 	@Autowired
 	private ModelMapper modelMapper;
 	
-	public List<Author> getAuthors(){
-		return authorRepo.findAll();
+	public List<AuthorDto> getAuthors(){
+		List<Author> authors = authorRepo.findAll();
+		List<AuthorDto> authorDto = authors.stream()
+				.map(author -> modelMapper.map(author, AuthorDto.class)).collect(Collectors.toList());
+		return authorDto;
 	}
 	
-	public Author getAuthor(Long id) {
-		return authorRepo.findById(id).orElse(null);
+	public AuthorDto getAuthor(Long id) {
+		Author author = modelMapper.map(id,Author.class);
+		return modelMapper.map(authorRepo.findById(id), AuthorDto.class);
 	}
 	
 	public AuthorDto newAuthor(AuthorDto authorDto) {
@@ -35,15 +40,14 @@ public class AuthorService {
 		return modelMapper.map(authorRepo.save(author), AuthorDto.class);
 	}
 	
-	public Author updateAuthor(Long id, Author updateAuthor) {
+	public AuthorDto updateAuthor(Long id, AuthorDto updateauthor) {
 		
 		Optional<Author> author = authorRepo.findById(id);
 		if(author.isPresent()) {
 			Author toUpdate = author.get();
-			toUpdate.setName(updateAuthor.getName());
-			toUpdate.setSurname(updateAuthor.getSurname());
-			authorRepo.save(toUpdate);
-			return toUpdate;
+			toUpdate.setName(updateauthor.getName());
+			toUpdate.setSurname(updateauthor.getSurname());
+			return modelMapper.map(authorRepo.save(toUpdate), AuthorDto.class);
 		}
 		else
 			return null;
@@ -53,9 +57,5 @@ public class AuthorService {
 		authorRepo.deleteById(id);
 		return "Author is deleted!";
 	}
-	
-	
- 	
-	
 	
 }
