@@ -50,7 +50,7 @@ public class AuthorService {
 			return modelMapper.map(authorRepo.save(toUpdate), AuthorDto.class);
 		}
 		else
-			return null;
+			throw new RuntimeException("Author id not found!" +id);
 	}
 	
 	public String deleteOneAuthor(Long id) {

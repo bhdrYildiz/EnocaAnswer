@@ -29,26 +29,28 @@ public class AuthorController{
 	@Autowired
 	private AuthorService authorService;
 	
-	
 	@GetMapping
 	public List<AuthorDto> getAuthors(){
+		
 		return authorService.getAuthors();
 	}
 	
 	@GetMapping("/{id}")
 	public AuthorDto getAuthor(@PathVariable Long id){
+		
 		return authorService.getAuthor(id);
 	}
 	
 	@PostMapping("new")
 	public AuthorDto newAuthor(@RequestBody AuthorDto author) {
+		
 		return authorService.newAuthor(author);
 	}
 	
 	@PostMapping("update/{id}")
 	public AuthorDto updateAuthor(@PathVariable Long id, @RequestBody AuthorDto updateauthor) {
+		
 			return authorService.updateAuthor(id, updateauthor);
-			
 	} 
 	
 	@PostMapping("delete/{id}")

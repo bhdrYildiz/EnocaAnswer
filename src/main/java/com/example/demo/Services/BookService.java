@@ -42,11 +42,15 @@ public class BookService {
 		return modelMapper.map(bookRepo.findById(id), BookDto.class);
 	}
 	
-	public List<Book> getBookByAuthorId(Optional<Long> authorId){
-		if(authorId.isPresent())
-			return bookRepo.findByAuthorId(authorId);
-		else
-			return bookRepo.findAll();
+	public List<BookDto> getBookByAuthorId(Optional<Long> authorId){
+		List<Book> bookList;
+		if(authorId.isPresent()) {
+			bookList = bookRepo.findByAuthorId(authorId.get());
+		}else {
+			throw new RuntimeException("Author id not found!");
+		}
+		bookList= bookRepo.findAll();
+		return bookList.stream().map(book -> modelMapper.map(book, BookDto.class)).collect(Collectors.toList());
 	}
 	
 	public String newBook(Long id, Book book) {
@@ -55,16 +59,13 @@ public class BookService {
 				book.setAuthor(a);
 				bookRepo.save(book);
 				return "Book saved!";
-			}else
-				return "no such author in database!";
+			}
 		}
-		return "no such author in database!";
+		throw new RuntimeException("No such an Author in database!");
 	}
 	
 	public String deleteBook(Long id) {
 		 bookRepo.deleteById(id);
 		 return "Book deleted!";
 	}
-	
-
 }

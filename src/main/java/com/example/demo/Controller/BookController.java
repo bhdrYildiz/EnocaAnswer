@@ -42,7 +42,7 @@ public class BookController {
 	}
 	
 	@GetMapping("author/{author_id}")
-	List<Book> getBooksByAuthor(@RequestParam Optional<Long> author_id){
+	List<BookDto> getBooksByAuthor(@RequestParam Optional<Long> author_id){
 		return bookService.getBookByAuthorId(author_id);
 	}
 	
